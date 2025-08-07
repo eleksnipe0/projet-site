@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Générateur d'annonce</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
@@ -12,31 +12,98 @@
     textarea { width: 100%; height: 200px; margin-top: 10px; padding: 10px; }
     button { margin-top: 10px; padding: 10px 15px; cursor: pointer; }
     .output-section { background: white; padding: 15px; margin-top: 20px; border-radius: 5px; }
+    .cgv-section {
+      background: white; 
+      padding: 15px; 
+      margin-bottom: 20px; 
+      border-radius: 5px; 
+      white-space: pre-line; 
+      font-size: 14px;
+      line-height: 1.5;
+      max-height: 400px;
+      overflow-y: auto;
+    }
   </style>
 </head>
 <body>
   <h1>Générateur d'annonce simplifié</h1>
 
+  <!-- Section CGV -->
+  <div class="cgv-section" id="cgvTexte">
+1. Identification du vendeur
+
+Nom : Maxime Druelle
+Statut : Micro-entrepreneur
+Adresse : Halluin, France
+Contact : Via la messagerie de l'appli
+TVA non applicable, article 293 B du CGI
+
+2. Produits proposés
+
+Les articles proposés sont neufs ou d’occasion, selon l’annonce.
+📸 Les photos sont celles d’un modèle d’exposition et peuvent ne pas représenter l’exemplaire exact.
+📝 L’état réel de l’article est celui précisé dans la description.
+
+3. Prix
+
+Les prix sont en euros (€), toutes taxes comprises (TVA non applicable).
+⚠️ Faible négociation possible uniquement en cas d’achat par lot.
+Les frais d’envoi sont à la charge de l’acheteur sauf mention contraire.
+
+4. Paiement
+
+Les moyens de paiement acceptés sont :
+Paiement sécurisé de l'appli
+Espèces (remise en main propre)
+
+5. Livraison
+
+📦 Remise en main propre possible à Halluin (ou alentours).
+📮 Envoi possible via La Poste, Mondial Relay ou autre transporteur.
+L’expédition se fait après encaissement.
+🚫 Le vendeur n’est pas responsable des pertes, retards ou dommages causés par le transporteur. L’acheteur peut demander un envoi avec assurance à ses frais.
+
+6. Droit de rétractation
+    
+Conformément à l’article L221-18 du Code de la consommation, l’acheteur dispose d’un délai de 14 jours à compter de la réception du produit pour exercer son droit de rétractation.
+📝 Conditions du retour :
+Notification écrite obligatoire (via l'appli ou email)
+Retour à la charge de l’acheteur
+L’article doit être retourné dans le même état que lors de l’envoi
+Le remboursement sera effectué après réception et vérification de l’article
+❌ Aucun retour accepté si l’article est incomplet, endommagé ou modifié.
+
+7. Litiges
+
+En cas de désaccord, une résolution à l’amiable sera privilégiée.
+À défaut, le litige sera porté devant les tribunaux compétents du lieu du vendeur.
+
+8. Acceptation des conditions
+
+Toute commande vaut acceptation des présentes Conditions Générales de Vente.
+  </div>
+  <button onclick="copier('cgvTexte')">Copier les CGV</button>
+
   <label for="marque">Marque</label>
-  <input type="text" id="marque">
+  <input type="text" id="marque" />
 
   <label for="theme">Thème</label>
-  <input type="text" id="theme">
+  <input type="text" id="theme" />
 
   <label for="serie">Série</label>
-  <input type="text" id="serie">
+  <input type="text" id="serie" />
 
   <label for="modele">Modèle</label>
-  <input type="text" id="modele">
+  <input type="text" id="modele" />
 
   <label for="numero">Numéro</label>
-  <input type="text" id="numero">
+  <input type="text" id="numero" />
 
   <label for="nasst">N.ASST</label>
-  <input type="text" id="nasst">
+  <input type="text" id="nasst" />
 
   <label for="etat">État</label>
-  <input type="text" id="etat" placeholder="ex: Neuf, Bon état...">
+  <input type="text" id="etat" placeholder="ex: Neuf, Bon état..." />
 
   <button onclick="genererAnnonce()">Générer</button>
 
@@ -54,13 +121,13 @@
     const champs = ["marque", "theme", "serie", "modele", "numero", "nasst", "etat"];
 
     // Charger les données sauvegardées
-    window.onload = function() {
-      champs.forEach(id => {
+    window.onload = function () {
+      champs.forEach((id) => {
         const valeur = localStorage.getItem(id);
         if (valeur) document.getElementById(id).value = valeur;
       });
       genererAnnonce();
-    }
+    };
 
     function genererAnnonce() {
       const marque = document.getElementById("marque").value;
@@ -72,22 +139,47 @@
       const etat = document.getElementById("etat").value;
 
       // Sauvegarder dans le localStorage
-      champs.forEach(id => {
+      champs.forEach((id) => {
         localStorage.setItem(id, document.getElementById(id).value);
       });
 
       const titre = `${marque} | ${theme} | ${serie} | ${modele} | ${numero} | ${nasst}`;
-      const description = `Marque : ${marque}\nThème : ${theme}\nSérie : ${serie}\nModèle : ${modele}\nNuméro : ${numero}\nN.ASST : ${nasst}\nÉtat : ${etat}\n\nPrix non négociable mise à part en lot\nEmballage soigné ✅\nEnvoie sous 48h ! 🕓 ( hors dimanche et jours fériés français )`;
+      const description = `Marque : ${marque}
+Thème : ${theme}
+Série : ${serie}
+Modèle : ${modele}
+Numéro : ${numero}
+N.ASST : ${nasst}
+État : ${etat}
+
+Prix non négociable mise à part en lot
+Emballage soigné ✅
+Envoie sous 48h ! 🕓 ( hors dimanche et jours fériés français )`;
 
       document.getElementById("titre").value = titre;
       document.getElementById("description").value = description;
     }
 
     function copier(id) {
-      const champ = document.getElementById(id);
-      champ.select();
-      champ.setSelectionRange(0, 99999);
-      document.execCommand("copy");
+      let element = document.getElementById(id);
+      let textToCopy = "";
+
+      if (element.tagName.toLowerCase() === "textarea" || element.tagName.toLowerCase() === "input") {
+        element.select();
+        element.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+      } else {
+        // Pour un div ou autre, on copie son texte
+        if (id === "cgvTexte") {
+          textToCopy = element.innerText || element.textContent;
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            alert("CGV copiées dans le presse-papiers !");
+          });
+          return;
+        }
+      }
+
+      alert("Texte copié !");
     }
   </script>
 </body>
