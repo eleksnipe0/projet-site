@@ -152,13 +152,21 @@ Envoie sous 48h ! 🕓 ( hors dimanche et jours fériés français )`;
     }
 
     function copier(id) {
-      let element = document.getElementById(id);
+  let element = document.getElementById(id);
+  let texte = "";
 
-      if (element.tagName.toLowerCase() === "textarea" || element.tagName.toLowerCase() === "input") {
-        element.select();
-        element.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        alert("Texte copié !");
+  if (element.tagName.toLowerCase() === "textarea" || element.tagName.toLowerCase() === "input") {
+    texte = element.value;
+  } else {
+    texte = element.textContent;
+  }
+
+  // Utilise l'API moderne pour copier
+  navigator.clipboard.writeText(texte)
+    .then(() => alert("Texte copié !"))
+    .catch(err => alert("Erreur lors de la copie : " + err));
+}
+
       }
     }
   </script>
