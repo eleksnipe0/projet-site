@@ -9,27 +9,52 @@
     h1 { text-align: center; }
     label { font-weight: bold; display: block; margin-top: 10px; }
     input, select { width: 100%; padding: 8px; margin-top: 5px; }
-    textarea { width: 100%; height: 200px; margin-top: 10px; padding: 10px; }
+    textarea { width: 100%; height: 400px; margin-top: 10px; padding: 10px; white-space: pre-line; }
     button { margin-top: 10px; padding: 10px 15px; cursor: pointer; }
     .output-section { background: white; padding: 15px; margin-top: 20px; border-radius: 5px; }
-    .cgv-section {
-      background: white; 
-      padding: 15px; 
-      margin-bottom: 20px; 
-      border-radius: 5px; 
-      white-space: pre-line; 
-      font-size: 14px;
-      line-height: 1.5;
-      max-height: 400px;
-      overflow-y: auto;
-    }
   </style>
 </head>
 <body>
   <h1>Générateur d'annonce simplifié</h1>
 
-  <!-- Section CGV -->
-  <div class="cgv-section" id="cgvTexte">
+  <label for="marque">Marque</label>
+  <input type="text" id="marque" />
+
+  <label for="theme">Thème</label>
+  <input type="text" id="theme" />
+
+  <label for="serie">Série</label>
+  <input type="text" id="serie" />
+
+  <label for="modele">Modèle</label>
+  <input type="text" id="modele" />
+
+  <label for="numero">Numéro</label>
+  <input type="text" id="numero" />
+
+  <label for="nasst">N.ASST</label>
+  <input type="text" id="nasst" />
+
+  <label for="etat">État</label>
+  <input type="text" id="etat" placeholder="ex: Neuf, Bon état..." />
+
+  <button onclick="genererAnnonce()">Générer</button>
+
+  <div class="output-section">
+    <h3>Titre :</h3>
+    <textarea id="titre" readonly></textarea>
+    <button onclick="copier('titre')">Copier le titre</button>
+
+    <h3>Description + CGV :</h3>
+    <textarea id="description" readonly></textarea>
+    <button onclick="copier('description')">Copier la description + CGV</button>
+  </div>
+
+  <script>
+    const champs = ["marque", "theme", "serie", "modele", "numero", "nasst", "etat"];
+
+    // Texte CGV complet
+    const texteCGV = `
 1. Identification du vendeur
 
 Nom : Maxime Druelle
@@ -64,7 +89,7 @@ L’expédition se fait après encaissement.
 🚫 Le vendeur n’est pas responsable des pertes, retards ou dommages causés par le transporteur. L’acheteur peut demander un envoi avec assurance à ses frais.
 
 6. Droit de rétractation
-    
+
 Conformément à l’article L221-18 du Code de la consommation, l’acheteur dispose d’un délai de 14 jours à compter de la réception du produit pour exercer son droit de rétractation.
 📝 Conditions du retour :
 Notification écrite obligatoire (via l'appli ou email)
@@ -81,46 +106,8 @@ En cas de désaccord, une résolution à l’amiable sera privilégiée.
 8. Acceptation des conditions
 
 Toute commande vaut acceptation des présentes Conditions Générales de Vente.
-  </div>
-  <button onclick="copier('cgvTexte')">Copier les CGV</button>
+`.trim();
 
-  <label for="marque">Marque</label>
-  <input type="text" id="marque" />
-
-  <label for="theme">Thème</label>
-  <input type="text" id="theme" />
-
-  <label for="serie">Série</label>
-  <input type="text" id="serie" />
-
-  <label for="modele">Modèle</label>
-  <input type="text" id="modele" />
-
-  <label for="numero">Numéro</label>
-  <input type="text" id="numero" />
-
-  <label for="nasst">N.ASST</label>
-  <input type="text" id="nasst" />
-
-  <label for="etat">État</label>
-  <input type="text" id="etat" placeholder="ex: Neuf, Bon état..." />
-
-  <button onclick="genererAnnonce()">Générer</button>
-
-  <div class="output-section">
-    <h3>Titre :</h3>
-    <textarea id="titre" readonly></textarea>
-    <button onclick="copier('titre')">Copier le titre</button>
-
-    <h3>Description :</h3>
-    <textarea id="description" readonly></textarea>
-    <button onclick="copier('description')">Copier la description</button>
-  </div>
-
-  <script>
-    const champs = ["marque", "theme", "serie", "modele", "numero", "nasst", "etat"];
-
-    // Charger les données sauvegardées
     window.onload = function () {
       champs.forEach((id) => {
         const valeur = localStorage.getItem(id);
@@ -143,8 +130,7 @@ Toute commande vaut acceptation des présentes Conditions Générales de Vente.
         localStorage.setItem(id, document.getElementById(id).value);
       });
 
-      const titre = `${marque} | ${theme} | ${serie} | ${modele} | ${numero} | ${nasst}`;
-      const description = `Marque : ${marque}
+      const descriptionAnnonce = `Marque : ${marque}
 Thème : ${theme}
 Série : ${serie}
 Modèle : ${modele}
@@ -156,30 +142,24 @@ Prix non négociable mise à part en lot
 Emballage soigné ✅
 Envoie sous 48h ! 🕓 ( hors dimanche et jours fériés français )`;
 
+      // Ajout des CGV après un saut de ligne
+      const descriptionComplete = descriptionAnnonce + "\n\n---\n\n" + texteCGV;
+
+      const titre = `${marque} | ${theme} | ${serie} | ${modele} | ${numero} | ${nasst}`;
+
       document.getElementById("titre").value = titre;
-      document.getElementById("description").value = description;
+      document.getElementById("description").value = descriptionComplete;
     }
 
     function copier(id) {
       let element = document.getElementById(id);
-      let textToCopy = "";
 
       if (element.tagName.toLowerCase() === "textarea" || element.tagName.toLowerCase() === "input") {
         element.select();
         element.setSelectionRange(0, 99999);
         document.execCommand("copy");
-      } else {
-        // Pour un div ou autre, on copie son texte
-        if (id === "cgvTexte") {
-          textToCopy = element.innerText || element.textContent;
-          navigator.clipboard.writeText(textToCopy).then(() => {
-            alert("CGV copiées dans le presse-papiers !");
-          });
-          return;
-        }
+        alert("Texte copié !");
       }
-
-      alert("Texte copié !");
     }
   </script>
 </body>
