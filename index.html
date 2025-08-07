@@ -51,6 +51,17 @@
   </div>
 
   <script>
+    const champs = ["marque", "theme", "serie", "modele", "numero", "nasst", "etat"];
+
+    // Charger les données sauvegardées
+    window.onload = function() {
+      champs.forEach(id => {
+        const valeur = localStorage.getItem(id);
+        if (valeur) document.getElementById(id).value = valeur;
+      });
+      genererAnnonce();
+    }
+
     function genererAnnonce() {
       const marque = document.getElementById("marque").value;
       const theme = document.getElementById("theme").value;
@@ -59,6 +70,11 @@
       const numero = document.getElementById("numero").value;
       const nasst = document.getElementById("nasst").value;
       const etat = document.getElementById("etat").value;
+
+      // Sauvegarder dans le localStorage
+      champs.forEach(id => {
+        localStorage.setItem(id, document.getElementById(id).value);
+      });
 
       const titre = `${marque} | ${theme} | ${serie} | ${modele} | ${numero} | ${nasst}`;
       const description = `Marque : ${marque}\nThème : ${theme}\nSérie : ${serie}\nModèle : ${modele}\nNuméro : ${numero}\nN.ASST : ${nasst}\nÉtat : ${etat}\n\nPrix non négociable mise à part en lot\nEmballage soigné ✅\nEnvoie sous 48h ! 🕓 ( hors dimanche et jours fériés français )`;
